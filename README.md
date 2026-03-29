@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8" />
+  <title>bainance</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0e11;
+      color: white;
+      direction: rtl;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 30px;
+      background: #11151c;
+      border-bottom: 1px solid #222;
+    }
+
+    header h1 {
+      color: #fcd535;
+    }
+
+    button {
+      background: #fcd535;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 20px 30px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: none;
+      background: #1e2329;
+      color: white;
+    }
+
+    .card {
+      background: #1e2329;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .price {
+      color: #0ecb81;
+    }
+
+    .buy {
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>bainance</h1>
+    <button onclick="alert('דמו בלבד')">התחברות</button>
+  </header>
+
+  <div class="container">
+    <h2>מטבעות מובילים</h2>
+    <input type="text" placeholder="חפש מטבע..." onkeyup="searchCoin(this.value)" />
+
+    <div class="card">
+      <span>Bitcoin (BTC)</span>
+      <div>
+        <span id="btc" class="price">$0</span>
+        <button class="buy">קנה</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <span>Ethereum (ETH)</span>
+      <div>
+        <span id="eth" class="price">$0</span>
+        <button class="buy">קנה</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <span>Solana (SOL)</span>
+      <div>
+        <span id="sol" class="price">$0</span>
+        <button class="buy">קנה</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function searchCoin(value) {
+      const cards = document.querySelectorAll(".card");
+      cards.forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(value.toLowerCase())
+          ? "flex"
+          : "none";
+      });
+    }
+
+    async function loadPrices() {
+      try {
+        const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd");
+        const data = await res.json();
+
+        document.getElementById("btc").innerText = "$" + data.bitcoin.usd;
+        document.getElementById("eth").innerText = "$" + data.ethereum.usd;
+        document.getElementById("sol").innerText = "$" + data.solana.usd;
+      } catch (e) {
+        console.error("Failed to load prices", e);
+      }
+    }
+
+    loadPrices();
+  </script>
+</body>
+</html>
